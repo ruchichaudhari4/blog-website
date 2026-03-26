@@ -4,61 +4,43 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function EditBlog() {
-  const params = useParams();
+  const { id } = useParams();
   const router = useRouter();
-  const id = params.id;
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    if (!id) return;
-
-    fetch(`http://localhost:5000/api/blogs/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        const blog = data.blog || data;
-        setTitle(blog.title);
-        setContent(blog.content);
+    fetch(`http://localhost:5000/blog/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTitle(data.title);
+        setContent(data.content);
       });
   }, [id]);
 
   const handleUpdate = async () => {
-    const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+    await fetch(`http://localhost:5000/update-blog/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content }),
     });
 
-    if (res.ok) {
-      alert("✅ Blog Updated!");
-      router.push("/");
-    } else {
-      alert("❌ Error updating blog");
-    }
+    router.push("/");
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "auto" }}>
-      <h1>✏️ Edit Blog</h1>
+    <div style={{ padding: "20px" }}>
+      <h2>Edit Blog</h2>
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-      />
+      <input value={title} onChange={(e) => setTitle(e.target.value)} />
 
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
       />
 
-      <button onClick={handleUpdate} className="btn">
-        Update Blog
-      </button>
+      <button onClick={handleUpdate}>Update</button>
     </div>
   );
 }

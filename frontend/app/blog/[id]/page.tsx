@@ -3,32 +3,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-export default function BlogPage() {
-  const params = useParams();
-  const id = params.id;
-
+export default function ViewBlog() {
+  const { id } = useParams();
   const [blog, setBlog] = useState<any>(null);
 
   useEffect(() => {
-    if (!id) return;
-
-    fetch(`http://localhost:5000/api/blogs/${id}`)
-      .then(res => res.json())
-      .then(data => setBlog(data.blog || data));
+    fetch(`http://localhost:5000/blog/${id}`)
+      .then((res) => res.json())
+      .then(setBlog);
   }, [id]);
 
   if (!blog) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h1>{blog.title}</h1>
-
-      <img
-        src={blog.image}
-        style={{ width: "100%", borderRadius: "10px" }}
-      />
-
       <p>{blog.content}</p>
+
+      {blog.image && (
+        <img src={`http://localhost:5000/uploads/${blog.image}`} width="300" />
+      )}
     </div>
   );
 }

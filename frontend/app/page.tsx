@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState<any[]>([]);
   const router = useRouter();
 
   const fetchBlogs = async () => {
-    const res = await fetch("http://localhost:5000/api/blogs");
+    const res = await fetch("http://localhost:5000/blogs");
     const data = await res.json();
     setBlogs(data);
   };
@@ -17,16 +17,10 @@ export default function Home() {
     fetchBlogs();
   }, []);
 
-  // ✅ DELETE
   const handleDelete = async (id: string) => {
-    const confirmDelete = confirm("Are you sure?");
-    if (!confirmDelete) return;
-
-    await fetch(`http://localhost:5000/api/blogs/${id}`, {
+    await fetch(`http://localhost:5000/delete-blog/${id}`, {
       method: "DELETE",
     });
-
-    alert("Deleted ✅");
     fetchBlogs();
   };
 
@@ -34,53 +28,29 @@ export default function Home() {
     <div style={{ padding: "20px" }}>
       <h1>🔥 All Blogs</h1>
 
-      {blogs.map((blog: any) => (
-        <div
-          key={blog._id}
-          style={{
-            background: "#1f2937",
-            padding: "20px",
-            margin: "20px 0",
-            borderRadius: "10px",
-          }}
-        >
-          <img
-            src={blog.image}
-            alt=""
-            style={{
-              width: "100%",
-              height: "200px",
-              objectFit: "cover",
-              borderRadius: "10px",
-            }}
-          />
-
-          <h2>{blog.title}</h2>
+      {blogs.map((blog) => (
+        <div key={blog._id} style={{ margin: "15px 0" }}>
+          <h3>{blog.title}</h3>
           <p>{blog.content}</p>
 
-          {/* ✅ BUTTONS BACK */}
-          <div style={{ marginTop: "10px" }}>
-            <button
-              onClick={() => router.push(`/blog/${blog._id}`)}
-              style={{ marginRight: "10px" }}
-            >
-              View
-            </button>
+          {blog.image && (
+            <img
+              src={`http://localhost:5000/uploads/${blog.image}`}
+              width="200"
+            />
+          )}
 
-            <button
-              onClick={() => router.push(`/edit-blog/${blog._id}`)}
-              style={{ marginRight: "10px" }}
-            >
-              Edit
-            </button>
+          <br />
 
-            <button
-              onClick={() => handleDelete(blog._id)}
-              style={{ background: "red", color: "white" }}
-            >
-              Delete
-            </button>
-          </div>
+          <button onClick={() => router.push(`/blog/${blog._id}`)}>
+            👁 View
+          </button>
+
+          <button onClick={() => router.push(`/edit-blog/${blog._id}`)}>
+            ✏ Edit
+          </button>
+
+          <button onClick={() => handleDelete(blog._id)}>🗑 Delete</button>
         </div>
       ))}
     </div>
