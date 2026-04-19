@@ -100,21 +100,9 @@ Blog View
 🔒 Role-based Authentication
 👨‍💻 Author
 
-Rahul Ghanchi
+Himani Chuadhari
 
 GitHub: https://github.com/Rahul-ghanchi
 ⭐ Show Your Support
 
 If you like this project, give it a ⭐ on GitHub!
-
-
----
-
-# 🔥 Next Step (important)
-
-Ab ye kar:
-
-```bash
-git add README.md
-git commit -m "Updated professional README"
-git push origin main
